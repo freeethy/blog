@@ -8,8 +8,8 @@
 ![目录结构](https://github.com/freeethy/blog/blob/master/201802/images/webpack-multiple-page.png)
 
 ## 思路
-多页面需要多个入口，使用webpack插件html-webpack-plugin生成页面
-/components/ 用来存放公用的组件信息，如header,footer,sidebar等
+多页面需要多个入口，使用webpack插件html-webpack-plugin生成页面  
+components 用来存放公用的组件信息，如header,footer,sidebar等
 ```
 var globInstance = new glob.Glob('!(_)*', {
     cwd: path.resolve(__dirname, 'src/views/'), // 在views目录里找
