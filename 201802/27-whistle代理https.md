@@ -22,4 +22,9 @@ w2 restart -A
 [Windows安装证书](http://program.most.gov.cn/cert/ca.htm)  
 [window10/edge中internet选项设置](https://jingyan.baidu.com/article/b907e6278e188e46e7891cb4.html)
 
+### 梨子
+```
+/^https:\/\/xxx\.xxx\.net\/((?!aaa).*)/ http://127.0.0.1:8080/$1
+```
+http://127.0.0.1:8080 为本地启动的服务，上面代码表示https://xxx.xxx.net下除了包含aaa的地址均代理到http://127.0.0.1:8080
 
