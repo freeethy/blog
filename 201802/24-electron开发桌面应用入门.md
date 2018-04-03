@@ -1,4 +1,4 @@
-# electron开发桌面应用入门
+# electron构建跨平台桌面应用入门
 electron是基于Node.js和Chromium做的一个工具。electron是的可以使用前端技术实现桌面开发，并且支持多平台运行。
 
 ## 快速启动项目
