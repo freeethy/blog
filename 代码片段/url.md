@@ -20,11 +20,11 @@ function getParameterByName(name, url) {
 
 ```
 function loadScript(n) {
-    for (var i = 0; i < n.length; i++) {
-      var s = document.createElement('script');
-      s.src = n[i];
-      s.async = false;
-      document.body.appendChild(s);
-    }
+  for (var i = 0; i < n.length; i++) {
+    var s = document.createElement('script');
+    s.src = n[i];
+    s.async = false;
+    document.body.appendChild(s);
   }
+}
 ```
