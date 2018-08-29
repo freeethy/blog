@@ -58,7 +58,7 @@ $(".chat").on("click", ".audio-msg i", e => {
 });
 ```
 
-> 碰到的问题: benz-amr-recorder 需要先用 ajax 请求去获取.amr 文件的内容,此项目的.amr 文件存储在阿里云,直接请求会跨域,用 nginx 将阿里云地址做了一层转换,并对转换后的地址加了允许跨域的 header
+> 碰到的问题: benz-amr-recorder 需要先用 XMLHttpRequest 请求去获取.amr 文件的内容,此项目的.amr 文件存储在阿里云,直接请求会跨域,用 nginx 将阿里云地址做了一层转换,并对转换后的地址加了允许跨域的 header
 
 ### 场景 B
 
