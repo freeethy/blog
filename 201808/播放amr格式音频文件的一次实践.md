@@ -127,3 +127,10 @@ function audio() {
 ## 总结
 
 第三方库使用的是 HTML5 Web Audio API AudioContext 来完成音频的播放,需要去了解下 AudioContext.
+
+<!-- Failed to construct 'AudioContext': number of hardware contexts reached maximum -->
+
+Reference it to a variable i.e:
+var myAudioCtx = new AudioContext();
+Then destroy by calling
+myAudioCtx.close();
