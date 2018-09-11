@@ -34,6 +34,27 @@
     action -> reducer
     store => next => action
 
+### middlewar-demo
+
+```javascript
+export default store => next => action => {
+  if (action.type == "IM_REQUEST") {
+    let {
+      to = 0,
+      chatType = 0,
+      kind,
+      message,
+      sourceType = 0,
+      sendCallback = () => {}
+    } = action.payload || {};
+
+    doSomeImRequest();
+  } else {
+    next(action);
+  }
+};
+```
+
 ## Provider
 
 # 需要进一步理解
