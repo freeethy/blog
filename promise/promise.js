@@ -2,6 +2,7 @@
 *  实现promise，模拟
 *  http://www.zhufengpeixun.cn/plan/html/2.Promise.html#t95.%20promise%20%E5%81%9A%E4%B8%BA%E5%87%BD%E6%95%B0%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC 
 *  基于 https://promisesaplus.com/
+*  多个then时有问题，待解决
 */
 const PENDING = "pending";
 const FULFILLED = "fulfilled";
@@ -54,7 +55,7 @@ class MyPromise {
       promise2 = new MyPromise(function(resolve, reject) {
         try {
           let x = onFulfilled(that.value);
-          that.resolvePromise(promise2, x, resolve, reject);
+          that.resolvePromise.bind(that, promise2, x, resolve, reject);
         } catch (e) {
           reject(e);
         }
@@ -64,7 +65,7 @@ class MyPromise {
       return new MyPromise(function(resolve, reject) {
         try {
           let x = onRejected(that.value);
-          that.resolvePromise(promise2, x, resolve, reject);
+          that.resolvePromise.bind(that, promise2, x, resolve, reject);
         } catch (e) {
           reject(e);
         }
@@ -75,7 +76,7 @@ class MyPromise {
         that.onResolvedCallbacks.push(function(value) {
           try {
             let x = onFulfilled(value);
-            that.resolvePromise(promise2, x, resolve, reject);
+            that.resolvePromise.bind(that, promise2, x, resolve, reject);
           } catch (e) {
             reject(e);
           }
@@ -83,7 +84,7 @@ class MyPromise {
         that.onRejectedCallbacks.push(function(value) {
           try {
             let x = onRejected(value);
-            that.resolvePromise(promise2, x, resolve, reject);
+            that.resolvePromise.bind(that, promise2, x, resolve, reject);
           } catch (e) {
             reject(e);
           }
@@ -101,6 +102,8 @@ class MyPromise {
   resolvePromise(promise2, x, resolve, reject) {
     let then, called;
 
+    console.log(x);
+
     if (x !== null && (typeof x === "object" || typeof x === "function")) {
       try {
         then = x.then;
@@ -110,7 +113,7 @@ class MyPromise {
             function(y) {
               if (called) return;
               called = true;
-              this.resolvePromise(promise2, y, resolve, reject);
+              this.resolvePromise.bind(this, promise2, y, resolve, reject);
             },
             function(r) {
               if (called) return;

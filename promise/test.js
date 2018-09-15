@@ -1,5 +1,5 @@
 const MyPromise = require("./promise");
-new MyPromise(function(resolve, reject) {
+let p1 = new MyPromise(function(resolve, reject) {
   setTimeout(() => {
     var p1 = new Promise(function(resolve, reject) {
       setTimeout(function() {
@@ -14,7 +14,10 @@ new MyPromise(function(resolve, reject) {
   }, 1000);
 }).then(
   function(data) {
-    console.log(data);
+    return new MyPromise(function(resolve, reject) {
+      console.log(data);
+      resolve(1);
+    });
   },
   err => {
     console.log(err);
