@@ -59,14 +59,14 @@ export default function connectAdvanced(
           selectorFactoryOptions
         );
         this.selector = makeSelectorStateful(sourceSelector, this.store);
-        this.onStateChange();
       }
-
+      
       initSubscription() {
         this.subscription = new Subscription(
           this.store,
           this.onStateChange.bind(this)
         );
+        this.onStateChange();
       }
 
       onStateChange() {
