@@ -49,6 +49,7 @@ export default function connectAdvanced(
 
         this.store = store;
         this.initComponent(props);
+
         this.initSelector();
         this.initSubscription();
       }
@@ -60,7 +61,7 @@ export default function connectAdvanced(
         );
         this.selector = makeSelectorStateful(sourceSelector, this.store);
       }
-      
+
       initSubscription() {
         this.subscription = new Subscription(
           this.store,
@@ -71,7 +72,11 @@ export default function connectAdvanced(
 
       onStateChange() {
         this.selector.run();
-        if (this.selector.shouldComponentUpdate) {
+
+        //如果有错误则在此抛出来
+        if (this.selector.error) {
+          throw this.selector.error;
+        } else if (this.selector.shouldComponentUpdate) {
           this.wrappedComponent.props = this.selector.props;
           this.selector.shouldComponentUpdate = false;
         }

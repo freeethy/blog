@@ -1,7 +1,9 @@
 import { wrapMapToPropsFunc } from './wrapMaptoProps'
 import connectAdvanced from '../components/connectAdvanced'
 import defaultSelectorFactory from './selectorFactory'
+import shallowEqual from '../utils/shallowEqual'
 
+function strictEqual(a, b) { return a === b }
 
 export function createConnect(
     {
@@ -13,13 +15,19 @@ export function createConnect(
 ) {
     return function connect(
         mapStateToProps,
-        mapDispatchToProps
+        mapDispatchToProps,
+        {
+            areStatesEqual = strictEqual,
+            areStatePropsEqual = shallowEqual
+        } = {}
     ) {
         const initMapStateToProps = mapStateToPropsFactories(mapStateToProps)
         const initMapDispatchToProps = mapDispatchToPropsFactories(mapDispatchToProps)
         return connectHOC(selectorFactory, {
             initMapStateToProps,
-            initMapDispatchToProps
+            initMapDispatchToProps,
+            areStatesEqual,
+            areStatePropsEqual
         })
     }
 }
