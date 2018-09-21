@@ -37,6 +37,7 @@ export default provider;
 - component 生命周期
 - component 修改 props 重新 render
 - store 传入所有的 connect 包裹的组件,store.dispatch(action)时，比较 component 的 props 变化（subscribe），实现 component 级别的更新，而不是全局更新
+- 子组件
 
 ### jq-component
 
@@ -47,3 +48,24 @@ export default provider;
 ### jq-redux
 
 - 将 store 放在 connect 外层的闭包中，connect 中就可以取到 store 了
+
+### 子组件 & componentWillUnmount
+
+子组件放在父组件的 componentDidMount 和 componentDidUpdate 中执行，通过 new ChildComponent()实现重新渲染，渲染之前会执行子组件的 componentWillUnmount，具体逻辑在 component 组件内部，具体可看\_childWillUpdate，\_getAllChildren 会递归获取所有子组件，返回所有子组件数组，子组件倒序排列，然后执行所有子组件的 componentWillUnmount，并将子组件引用设置为 null
+
+```javascript
+getChildComponents() {
+  return this.children;
+}
+componentDidMount() {
+  this.renderChild();
+}
+componentDidUpdate() {
+  this.renderChild();
+}
+renderChild(){
+  this.children.head = new Head({
+    domId: "head"
+  });
+}
+```
