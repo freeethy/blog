@@ -90,7 +90,7 @@ export default class Component {
       child.componentWillUnmount && child.componentWillUnmount();
       child = null;
     });
-    children = null;
+    this.children = children = {};
   }
 
   _run(value) {
