@@ -1,27 +1,27 @@
-const history = window.history;
+// Now is just for hashRouter
 
 class History {
-  constructor() {
-    this.listeners = [];
+  constructor () {
+    this.listeners = []
   }
 
   push = path => {
-    history.pushState({}, "", path);
-    this.notifyAll();
-  };
+    window.location.hash = path
+    this.notifyAll()
+  }
 
   listen = listener => {
-    this.listeners.push(listener);
+    this.listeners.push(listener)
     return () => {
-      this.listeners = this.listeners.filter(ele => ele !== listener);
-    };
-  };
+      this.listeners = this.listeners.filter(ele => ele !== listener)
+    }
+  }
 
   notifyAll = () => {
     this.listeners.forEach(listen => {
-      listen();
-    });
-  };
+      listen()
+    })
+  }
 }
 
-export default new History();
+export default new History()
