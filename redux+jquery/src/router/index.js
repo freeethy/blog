@@ -1,4 +1,5 @@
-import HashRouter from './HashRouter'
-import history from './history'
+import HashRouter from "./HashRouter";
+import history from "./history";
+import Link from "./Link";
 
-export { HashRouter, history }
+export { HashRouter, history, Link };

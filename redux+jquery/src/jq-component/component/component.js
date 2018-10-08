@@ -52,13 +52,13 @@ export default class Component {
       } else {
         // 得到的是组件对象 {content:Connect(Content)}
         let type = Object.prototype.toString.call(childComponents);
-        if (type === "[object Array]" || type === "[object Object]") {
+        if (type === "[object Object]") {
           children = Object.values(childComponents);
         } else {
           console.log(
             `${
               realComponent.constructor.name
-            }'s getChildComponents should return a component or a object with component as values`
+            }'s getChildComponents should return a object with component as values`
           );
         }
       }
@@ -84,10 +84,10 @@ export default class Component {
     let children = this._getAllChildren(this);
 
     if (!children || (children && !children.length)) return;
-    console.log(children, 111111);
 
     children.map(child => {
       child.componentWillUnmount && child.componentWillUnmount();
+      child._dom.innerHTML = "";
       child = null;
     });
     this.children = children = {};

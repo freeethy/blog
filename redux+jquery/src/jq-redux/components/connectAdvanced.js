@@ -48,6 +48,8 @@ export default function connectAdvanced(
         }
 
         this.store = store;
+        // 用于合并new Component时传如的props
+        this.props = props.props || {};
         this.initComponent(props);
 
         this.initSelector();
@@ -71,7 +73,7 @@ export default function connectAdvanced(
       }
 
       onStateChange() {
-        this.selector.run();
+        this.selector.run(this.props);
 
         //如果有错误则在此抛出来
         if (this.selector.error) {

@@ -33,6 +33,6 @@ export const matchPath = (pathname, props, pathReAndKeys) => {
       keys.reduce((memo, key, index) => {
         memo[key.name] = values[index];
         return memo;
-      })
+      }, {})
   };
 };

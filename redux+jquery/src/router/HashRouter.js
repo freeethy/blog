@@ -1,5 +1,5 @@
-import Component from 'JqComponent'
-import { compilePath, matchPath } from './utils'
+import Component from "JqComponent";
+import { compilePath, matchPath } from "./utils";
 
 /*
 * props: {
@@ -12,48 +12,54 @@ import { compilePath, matchPath } from './utils'
 * }
 */
 class HashRouter extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
-    this.children = {}
-
+    this.children = {};
     this.history = props.history || {
-      push (hash) {
-        window.location.hash = hash
+      push(hash) {
+        window.location.hash = hash;
       }
-    }
+    };
 
-    this.routes = props.routes || {}
+    this.routes = props.routes || {};
+    // 触发后续生命周期
+    this.props = props;
   }
 
-  getChildComponents () {
-    return this.children
+  getChildComponents() {
+    return this.children;
   }
 
-  componentDidMount () {
-    this.unlistener = this.history.listen(this.renderRoute)
-    this.history.push(window.location.hash || '/')
+  componentDidMount() {
+    this.unlistener = this.history.listen(this.renderRoute.bind(this));
+    this.history.push(window.location.hash || "/");
+
+    window.addEventListener("hashchange", e => {
+      this.history.push(window.location.hash.slice(1));
+    });
   }
 
-  componentWillUnmount () {
-    this.unlistener()
+  componentWillUnmount() {
+    this.unlistener();
   }
 
-  render () {
-    return ''
+  render() {
+    return "";
   }
 
   onEnter = () => {
-    return true
-  }
+    return true;
+  };
 
-  renderRoute () {
-    const { exact, strict, sensitive, onEnter = this.onEnter } = this.props
-    const routes = this.routes || {}
-    let pathname = window.location.hash.slice(1) || '/'
+  renderRoute() {
+    const { exact, strict, sensitive, onEnter = this.onEnter } = this.props;
+    const routes = this.routes || {};
+    let pathname = window.location.hash.slice(1) || "/";
 
-    if (!onEnter() && pathname !== '/') {
-      this.history.push('/')
+    if (!onEnter() && pathname !== "/") {
+      this.history.push("/");
+      return;
     }
 
     Object.keys(routes).map(v => {
@@ -62,28 +68,28 @@ class HashRouter extends Component {
         component: Component,
         domId,
         onEnter = this.onEnter
-      } = routes[v]
+      } = routes[v];
       let pathReAndKeys = compilePath(path, {
         exact,
         strict,
         sensitive
-      })
+      });
 
-      let match = matchPath(pathname, { path, exact }, pathReAndKeys)
+      let match = matchPath(pathname, { path, exact }, pathReAndKeys);
 
-      if (!match || !onEnter()) return
+      if (!match || !onEnter()) return;
 
-      let { path, params } = match
+      let { path: matchpath, params } = match;
       this.children[v] = new Component({
         domId,
         props: {
           history: this.history,
-          location: { pathname: path },
+          location: { pathname: matchpath },
           params
         }
-      })
-    })
+      });
+    });
   }
 }
 
-export default HashRouter
+export default HashRouter;
