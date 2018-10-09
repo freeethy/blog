@@ -63,12 +63,9 @@ class HashRouter extends Component {
     }
 
     Object.keys(routes).map(v => {
-      let {
-        path,
-        component: Component,
-        domId,
-        onEnter = this.onEnter
-      } = routes[v];
+      let { path, component: Element, domId, onEnter = this.onEnter } = routes[
+        v
+      ];
       let pathReAndKeys = compilePath(path, {
         exact,
         strict,
@@ -80,7 +77,7 @@ class HashRouter extends Component {
       if (!match || !onEnter()) return;
 
       let { path: matchpath, params } = match;
-      this.children[v] = new Component({
+      this.children[v] = new Element({
         domId,
         props: {
           history: this.history,

@@ -26,6 +26,7 @@ function selectorFactory(
   let hasRunAtLeastOnce = false;
   let state;
   let stateProps;
+  let ownProps;
   let dispatchProps;
   let mergedProps;
 
@@ -33,24 +34,25 @@ function selectorFactory(
   function handleFirstCall(firstState, props) {
     state = firstState;
     stateProps = mapStateToProps(state);
+    ownProps = props;
     dispatchProps = mapDispatchToProps(dispatch);
-    mergedProps = { ...stateProps, ...dispatchProps, ...props };
+    mergedProps = { ...stateProps, ...dispatchProps, ...ownProps };
     hasRunAtLeastOnce = true;
     return mergedProps;
   }
 
   //后续调用
-  function handleSubsequentCalls(nextState, props) {
+  function handleSubsequentCalls(nextState) {
     //这里是一个静态比较
     const stateChanged = !areStatesEqual(nextState, state);
     state = nextState;
 
-    if (stateChanged) return handleNewState(props);
+    if (stateChanged) return handleNewState();
     return mergedProps;
   }
 
   //处理新的state
-  function handleNewState(props) {
+  function handleNewState() {
     const nextStateProps = mapStateToProps(state);
     //判断传入当前组件props的这一部分子state对象是否有变化
     // 这里是一个浅比较
@@ -58,13 +60,13 @@ function selectorFactory(
     stateProps = nextStateProps;
 
     if (statePropsChanged)
-      mergedProps = { ...stateProps, ...dispatchProps, ...props };
+      mergedProps = { ...stateProps, ...dispatchProps, ...ownProps };
     return mergedProps;
   }
 
   return function finalPropsSelector(nextState, props) {
     return hasRunAtLeastOnce
-      ? handleSubsequentCalls(nextState, props)
+      ? handleSubsequentCalls(nextState)
       : handleFirstCall(nextState, props);
   };
 }

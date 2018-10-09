@@ -10,7 +10,7 @@ export default class Component {
     }
 
     this._domId = this._prefix + data.domId;
-    this._dom = document.getElementById(this._prefix + data.domId);
+    this._dom = document.getElementById(this._domId);
     if (this._dom === null) {
       console &&
         console.error &&
@@ -18,9 +18,10 @@ export default class Component {
       new Error(`不存在id为${this._domId}的dom元素`);
     }
 
-    if (data.props) {
-      this._run(data.props);
-    }
+    // TODO: 会在继承的组件super中执行,有问题
+    // if (data.props) {
+    //   this._run(data.props);
+    // }
   }
 
   componentWillMount() {}
@@ -79,7 +80,7 @@ export default class Component {
   }
 
   // 子组件重新挂载或卸载
-  _childWillUpdate(component) {
+  _childWillUpdate() {
     // 递归得到所有子组件，顺序从子组件到父组件
     let children = this._getAllChildren(this);
 
