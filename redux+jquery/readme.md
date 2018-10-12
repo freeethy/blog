@@ -69,3 +69,13 @@ renderChild(){
   });
 }
 ```
+
+### router
+
+实现了一版 hashRouter
+
+### 待添加的功能和需解决的问题
+
+- 重构 component,考虑引入 jsx,dom-diff 处理渲染. 目前存在多次渲染的问题,严重影响性能,而且父子组件关系不是特别清晰,子组件的渲染有点乱
+- 引入 immutable.js,处理不可变数据
+- 引入 rxjs, redux-observable 处理复杂的逻辑
