@@ -32,6 +32,8 @@ export default class Component {
 
   render() {}
 
+  renderChild() {}
+
   componentDidMount() {}
 
   componentDidUpdate() {}
@@ -59,7 +61,7 @@ export default class Component {
           console.log(
             `${
               realComponent.constructor.name
-            }'s getChildComponents should return a object with component as values`
+            }'s getChildComponents should return a object with component as it's value`
           );
         }
       }
@@ -88,10 +90,15 @@ export default class Component {
 
     children.map(child => {
       child.componentWillUnmount && child.componentWillUnmount();
+      if (child.unsubscribe) {
+        child.unsubscribe();
+        child.unsubscribe = null;
+      }
       child._dom.innerHTML = "";
       child = null;
+      return child;
     });
-    this.children = children = {};
+    this.children = {};
   }
 
   _run(value) {
@@ -104,19 +111,26 @@ export default class Component {
 
     if (!this.isDidMounted) {
       this.componentWillMount();
+      // console.log(this.constructor.name, " componentWillMount");
     } else {
       this.componentWillUpdate();
+      // console.log(this.constructor.name, " componentWillUpdate");
     }
 
     this._dom.innerHTML = this.render();
+    // console.log(this.constructor.name, " render");
 
     this._childWillUpdate();
+
+    this.renderChild();
 
     if (!this.isDidMounted) {
       this.isDidMounted = true;
       this.componentDidMount();
+      // console.log(this.constructor.name, " componentDidMount");
     } else {
       this.componentDidUpdate();
+      // console.log(this.constructor.name, " componentDidUpdate");
     }
   }
   get props() {

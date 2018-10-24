@@ -69,6 +69,8 @@ export default function connectAdvanced(
           this.store,
           this.onStateChange.bind(this)
         );
+        this.wrappedComponent.unsubscribe = this.subscription.unsubscribe;
+
         this.onStateChange();
       }
 
