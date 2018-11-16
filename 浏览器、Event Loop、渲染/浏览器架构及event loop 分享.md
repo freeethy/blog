@@ -17,6 +17,7 @@ NodeJS 的 Event Loop 是基于 libuv 实现的。
 
 [进程与线程的一个简单解释-阮一峰](http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html)  
 [进程与线程的一个简单解释](https://segmentfault.com/a/1190000005884656)
+
 [以操作系统的角度述说线程与进程](https://kb.cnblogs.com/page/531409/)
 
 ### 浏览器内的进程
@@ -31,7 +32,7 @@ NodeJS 的 Event Loop 是基于 libuv 实现的。
 - 第三方插件崩溃时不会影响页面或者浏览器的稳定性
 - 方便了安全模型的实施，沙箱模型就是基于多进程架构
 
-chromium 浏览器的多进程模型：
+chromium 浏览器的多进程模型：  
 ![chromium 浏览器的多进程模型](https://img-blog.csdn.net/20160510000530303)
 
 - Browser 进程：浏览器的主进程（负责协调、主控），只有一个。负责游览器界面的显示、各个页面的管理，网络资源的管理，下载等，是所有其他类型进程的祖先，负责它们的创建和销毁等；
