@@ -5,3 +5,5 @@
 ## 参考
 
 [30 分钟理解 CORB 是什么](https://www.cnblogs.com/oneasdf/p/9525490.html)
+
+[CORB](https://www.chromium.org/Home/chromium-security/corb-for-developers)
