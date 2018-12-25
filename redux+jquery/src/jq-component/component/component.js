@@ -1,21 +1,24 @@
+import Logger from "Logger";
 export default class Component {
   isDidMounted = false;
+  lastProps = {};
 
   constructor(data) {
     this._prefix = "x_";
+    this.children = {};
 
     if (!(data && data.domId)) {
-      console && console.error && console.error(`组件创立需要domId属性`);
+      Logger && Logger.error && Logger.error(`组件创立需要domId属性`);
       new Error(`组件创立需要domId属性`);
     }
 
     this._domId = this._prefix + data.domId;
     this._dom = document.getElementById(this._domId);
     if (this._dom === null) {
-      console &&
-        console.error &&
-        console.error(`不存在id为${this._domId}的dom元素`);
-      new Error(`不存在id为${this._domId}的dom元素`);
+      Logger &&
+        Logger.error &&
+        Logger.error(`不存在id为${this._domId}的dom元素`);
+      // new Error(`不存在id为${this._domId}的dom元素`);
     }
 
     // TODO: 会在继承的组件super中执行,有问题
@@ -36,6 +39,10 @@ export default class Component {
 
   componentDidMount() {}
 
+  shouldComponentUpdate() {
+    return true;
+  }
+
   componentDidUpdate() {}
 
   componentWillUnmount() {}
@@ -47,25 +54,25 @@ export default class Component {
       ? component.wrappedComponent
       : component;
 
-    if (realComponent.getChildComponents) {
-      let childComponents = realComponent.getChildComponents() || {};
-      // 得到的是一个组件实例 Connect(Content)
-      if (childComponents instanceof Component) {
-        children = [childComponents];
+    // if (realComponent.getChildComponents) {
+    let childComponents = realComponent.children || {};
+    // 得到的是一个组件实例 Connect(Content)
+    if (childComponents instanceof Component) {
+      children = [childComponents];
+    } else {
+      // 得到的是组件对象 {content:Connect(Content)}
+      let type = Object.prototype.toString.call(childComponents);
+      if (type === "[object Object]") {
+        children = Object.values(childComponents);
       } else {
-        // 得到的是组件对象 {content:Connect(Content)}
-        let type = Object.prototype.toString.call(childComponents);
-        if (type === "[object Object]") {
-          children = Object.values(childComponents);
-        } else {
-          console.log(
-            `${
-              realComponent.constructor.name
-            }'s getChildComponents should return a object with component as it's value`
-          );
-        }
+        console.log(
+          `${
+            realComponent.constructor.name
+          }'s children should return a object with component as it's value`
+        );
       }
     }
+    // }
 
     children &&
       children.map(child => {
@@ -93,9 +100,9 @@ export default class Component {
       if (child.unsubscribe) {
         child.unsubscribe();
         child.unsubscribe = null;
+        child.dirty = true;
       }
-      child._dom.innerHTML = "";
-      child = null;
+      child._dom && (child._dom.innerHTML = "");
       return child;
     });
     this.children = {};
@@ -103,35 +110,37 @@ export default class Component {
 
   _run(value) {
     if (Object.prototype.toString.call(value) !== "[object Object]") {
-      console && console.error && console.error("props必须为一个对象");
-      new Error("props必须为一个对象");
+      Logger && Logger.error && Logger.error("props必须为一个对象");
+      // new Error("props必须为一个对象");
     }
+
+    if (this.dirty) return;
 
     this._prop = value;
 
     if (!this.isDidMounted) {
       this.componentWillMount();
-      // console.log(this.constructor.name, " componentWillMount");
     } else {
       this.componentWillUpdate();
-      // console.log(this.constructor.name, " componentWillUpdate");
     }
 
-    this._dom.innerHTML = this.render();
-    // console.log(this.constructor.name, " render");
+    if (!this.isDidMounted || this.shouldComponentUpdate(this.lastProps)) {
+      this._dom && (this._dom.innerHTML = this.render());
+      this._childWillUpdate();
 
-    this._childWillUpdate();
-
-    this.renderChild();
+      this.renderChild();
+    }
 
     if (!this.isDidMounted) {
       this.isDidMounted = true;
       this.componentDidMount();
-      // console.log(this.constructor.name, " componentDidMount");
     } else {
-      this.componentDidUpdate();
-      // console.log(this.constructor.name, " componentDidUpdate");
+      if (this.shouldComponentUpdate(this.lastProps)) {
+        this.componentDidUpdate();
+      }
     }
+
+    this.lastProps = value;
   }
   get props() {
     return this._prop;
