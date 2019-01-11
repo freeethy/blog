@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>测试Worker Timer</title>
+  </head>
+  <body>
+    <div>WorkerTimer:<span id="test1">0</span></div>
+    <div>WindowTimer:<span id="test2">0</span></div>
+
+    <script src="./timer-worker.js"></script>
+    <script>
+      window.onload = function() {
+        let count1 = 0;
+        let count2 = 0;
+
+        window.Timer.setInterval(() => {
+          count1 += 1;
+          document.getElementById("test1").innerHTML = count1;
+        }, 3000);
+        window.setInterval(() => {
+          count2 += 1;
+          document.getElementById("test2").innerHTML = count2;
+        }, 3000);
+      };
+    </script>
+  </body>
+</html>
